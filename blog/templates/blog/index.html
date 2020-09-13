@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ title }} :: {{ block.super }} {% endblock %}
+
+{% block content %}
+
+<section class="bg-text-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bg-text">
+                    <h3>Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu</h3>
+                    <p>В этом мире нет ничего важнее победы, и до тех пор, пока ты остаешься победителем, остальное
+                        неважно... Такое фундаментальное мышление – это то, что я не смогу изменить в себе до самой
+                        смерти. </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog-post-area">
+    <div class="container">
+        <div class="row">
+            <div class="blog-post-area-style">
+                {% for post in posts %}
+                <div class="col-md-3">
+                    <div class="single-post">
+                        {% if post.photo %}
+                        <a href="{{ post.get_absolute_url }}"><img src="{{ post.photo.url }}" height="191" alt=""></a>
+                        {% else %}
+                        <a href="{{ post.get_absolute_url }}"> <img src="https://picsum.photos/id/1060/300/201?blur=2" alt="{{ post.title }}"></a>
+                        {% endif %}
+                        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                        <h4><span>Posted By: <span class="author-name">{{ post.author}}</span></span>
+                        </h4>
+                        {{ post.content|truncatewords_html:20|safe }}
+                        <h4><span> {{ post.created_at|date:'d.m.Y' }} </span>
+                            <span style="margin-left: 34px;"> Количество просмотров {{ post.views }} </span>
+                        </h4>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

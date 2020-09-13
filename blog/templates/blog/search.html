@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Поиск :: {{ block.super }} {% endblock %}
+
+{% block content %}
+
+<section class="blog-post-area">
+    <div class="container">
+        <div class="border-top" style="border-top: 1px solid #40c4ff; margin-top: -50px"></div>
+        <div class="row">
+            <div class="blog-post-area-style">
+                {% for post in posts %}
+                <div class="col-md-3">
+                    <div class="single-post">
+                        {% if post.photo %}
+                        <img src="{{ post.photo.url }}" alt="">
+                        {% else %}
+                        <img src="https://picsum.photos/id/1060/300/201?blur=2" alt="{{ post.title }}">
+                        {% endif %}
+                        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                        <h4><span>Posted By: <span class="author-name">{{ post.author}}</span></span>
+                        </h4>
+                        {{ post.content|truncatewords_html:20|safe }}
+                        <h4><span> {{ post.created_at|date:'d.m.Y' }} </span>
+                            <span style="margin-left: 34px;"> Количество просмотров {{ post.views }} </span>
+                        </h4>
+                    </div>
+                </div>
+                {% empty %}
+                <p>По вашему запроса ничего не <найдено class="."></найдено></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+    {% block pagination %}
+    {% include 'inc/_search_pagination.html' %}
+    {% endblock %}
