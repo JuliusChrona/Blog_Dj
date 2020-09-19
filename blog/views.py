@@ -3,7 +3,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
+from rest_framework import generics, permissions
 
+from blog.permissions import IsOwnerOrAdminOrReadOnly
+from blog.serializers import PostSerializer
 from blog.models import Category, Post, Tag
 from blog.forms import CommentForm
 from django.db.models import F
@@ -90,11 +93,13 @@ class Search(ListView):
         context['s'] = f"s={self.request.GET.get('s')}&"
         return context
 
-def index(request):
-    return render(request, 'blog\index.html')
 
-def get_categories(request, slug):
-    return render(request, 'blog\category.html', {})
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all().order_by('-views')
+    serializer_class = PostSerializer
 
-def get_post(request, slug):
-    return render(request, 'blog\category.html', {})
+
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrAdminOrReadOnly,]
